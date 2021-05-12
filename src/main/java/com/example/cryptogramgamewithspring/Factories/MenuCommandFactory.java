@@ -2,13 +2,16 @@ package com.example.cryptogramgamewithspring.Factories;
 
 import com.example.cryptogramgamewithspring.Interfaces.CommandFactory;
 import com.example.cryptogramgamewithspring.Interfaces.MenuCommand;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
 @Repository
+@Qualifier("MenuCommands")
 public class MenuCommandFactory implements CommandFactory<MenuCommand> {
 
     private final Map<String, Supplier<? extends MenuCommand>> commands;
@@ -24,6 +27,6 @@ public class MenuCommandFactory implements CommandFactory<MenuCommand> {
 
     @Override
     public MenuCommand fetchCommand(String[] input) {
-        return commands.getOrDefault(input[0], () -> () -> System.out.println("gowno")).get();
+        return commands.getOrDefault(input[0], () -> () -> Arrays.stream(input).forEach(System.out::println)).get();
     }
 }

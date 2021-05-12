@@ -1,11 +1,11 @@
 package com.example.cryptogramgamewithspring.Controllers;
 
-import com.example.cryptogramgamewithspring.Factories.MenuCommandFactory;
 import com.example.cryptogramgamewithspring.InputOutput.InputPrompt;
 import com.example.cryptogramgamewithspring.InputOutput.View;
 import com.example.cryptogramgamewithspring.Interfaces.CommandFactory;
 import com.example.cryptogramgamewithspring.Interfaces.MenuCommand;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.io.FileNotFoundException;
@@ -20,7 +20,10 @@ public class Menu {
     private final CommandFactory<MenuCommand> commandFactory;
 
     @Autowired
-    public Menu(InputPrompt prompt, View view, PlayerRepository players, CommandFactory<MenuCommand> commandFactory) {
+    public Menu(InputPrompt prompt,
+                View view,
+                PlayerRepository players,
+                @Qualifier("MenuCommands") CommandFactory<MenuCommand> commandFactory) {
         this.prompt = prompt;
         this.view = view;
         this.players = players;

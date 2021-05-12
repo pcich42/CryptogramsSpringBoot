@@ -18,7 +18,6 @@ public class Runner implements CommandLineRunner {
     }
 
     @Override
-    @Order(1)
     public void run(String... args) {
         Menu menu = context.getBean(Menu.class);
         menu.mainLoop();
