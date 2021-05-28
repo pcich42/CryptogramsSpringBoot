@@ -1,6 +1,6 @@
-package com.example.cryptogramgamewithspring;
+package com.example.cryptogramgamewithspring.Presentation;
 
-import com.example.cryptogramgamewithspring.InputOutput.InputPrompt;
+import com.example.cryptogramgamewithspring.Presentation.InputPrompt;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import uk.org.webcompere.systemstubs.jupiter.SystemStubsExtension;

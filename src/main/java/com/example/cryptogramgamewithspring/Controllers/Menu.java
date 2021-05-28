@@ -1,9 +1,11 @@
 package com.example.cryptogramgamewithspring.Controllers;
 
-import com.example.cryptogramgamewithspring.InputOutput.InputPrompt;
-import com.example.cryptogramgamewithspring.InputOutput.View;
-import com.example.cryptogramgamewithspring.Interfaces.CommandFactory;
-import com.example.cryptogramgamewithspring.Interfaces.MenuCommand;
+import com.example.cryptogramgamewithspring.Commands.Commands.Command;
+import com.example.cryptogramgamewithspring.Commands.Factories.CommandFactory;
+import com.example.cryptogramgamewithspring.Player.InvalidFileFormatException;
+import com.example.cryptogramgamewithspring.Presentation.InputPrompt;
+import com.example.cryptogramgamewithspring.Presentation.ConsoleView;
+import com.example.cryptogramgamewithspring.Player.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -12,31 +14,27 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 @Component
-public class Menu {
+public class Menu implements GameController {
 
     private final InputPrompt prompt;
-    private final View view;
-    private final PlayerRepository players;
-    private final CommandFactory<MenuCommand> commandFactory;
+    private final ConsoleView view;
+    private final PlayerService players;
+    private final CommandFactory<Command<MenuContext>> commandFactory;
 
-    @Autowired
-    public Menu(InputPrompt prompt,
-                View view,
-                PlayerRepository players,
-                @Qualifier("MenuCommands") CommandFactory<MenuCommand> commandFactory) {
-        this.prompt = prompt;
-        this.view = view;
-        this.players = players;
-        this.commandFactory = commandFactory;
+    public Menu(MenuContext context) {
+        this.prompt = context.getPrompt();
+        this.view = context.getView();
+        this.players = context.getPlayers();
+        this.commandFactory = context.getCommandFactory();
     }
 
     public void run() {
-        System.out.println("Welcome to the Cryptograms Game!");
+        view.displayMessage("Welcome to the Cryptograms Game!");
     }
 
     public void mainLoop() {
         while (true) {
-            System.out.println("Choose what you want to do next.");
+            view.displayMessage("Choose what you want to do next.");
             String[] input = prompt.getInput();
             if (input[0].contains("exit")) break;
             fetchAndExecuteCommand(input);
@@ -44,8 +42,8 @@ public class Menu {
     }
 
     private void fetchAndExecuteCommand(String[] input) {
-        MenuCommand command = commandFactory.fetchCommand(input);
-        command.perform();
+        Command<MenuContext> command = commandFactory.fetchCommand(input);
+        command.execute();
     }
 
     public boolean loadPlayers() {
@@ -54,7 +52,7 @@ public class Menu {
         } catch (FileNotFoundException notFoundException) {
             view.displayMessage("Players file not found. Exiting...");
             return false;
-        } catch (IOException ioException) {
+        } catch (IOException | InvalidFileFormatException e) {
             view.displayMessage("File format invalid. Exiting...");
             return false;
         }

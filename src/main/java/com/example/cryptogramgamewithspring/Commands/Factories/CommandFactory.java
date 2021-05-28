@@ -1,4 +1,4 @@
-package com.example.cryptogramgamewithspring.Interfaces;
+package com.example.cryptogramgamewithspring.Commands.Factories;
 
 import org.springframework.stereotype.Repository;
 

@@ -1,4 +1,4 @@
-package com.example.cryptogramgamewithspring.InputOutput;
+package com.example.cryptogramgamewithspring.Presentation;
 
 import org.springframework.stereotype.Component;
 
