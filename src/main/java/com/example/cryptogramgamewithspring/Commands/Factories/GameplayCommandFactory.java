@@ -8,13 +8,13 @@ import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 @Repository
-@Qualifier("GamePlayCommands")
-public class GameplayCommandFactory implements CommandFactory<Command<GameContext>> {
+@Qualifier("GameplayCommands")
+public class GameplayCommandFactory implements CommandFactory<GameContext> {
 
-    private final Map<String, Supplier<Command<GameContext>>> commands;
+    private final Map<String, Function<GameContext, Command<GameContext>>> commands;
 
     public GameplayCommandFactory() {
         this.commands = new HashMap<>();
@@ -28,11 +28,12 @@ public class GameplayCommandFactory implements CommandFactory<Command<GameContex
     }
 
     @Override
-    public Command<GameContext> fetchCommand(String[] input) {
-        return commands.getOrDefault(input[0], getDefaultCommandSupplier(input)).get();
+    public Command<GameContext> fetchCommand(GameContext context) {
+        String[] input = context.getInput();
+        return commands.getOrDefault(input[0], getDefaultCommandSupplier(input)).apply(context);
     }
 
-    private Supplier<Command<GameContext>> getDefaultCommandSupplier(String[] input) {
+    private Function<GameContext, Command<GameContext>> getDefaultCommandSupplier(String[] input) {
         return enterGuessCommand::new;
     }
 }

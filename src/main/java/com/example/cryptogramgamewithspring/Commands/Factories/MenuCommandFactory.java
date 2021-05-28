@@ -10,13 +10,14 @@ import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 @Repository
 @Qualifier("MenuCommands")
-public class MenuCommandFactory implements CommandFactory<Command<MenuContext>> {
+public class MenuCommandFactory implements CommandFactory<MenuContext> {
 
-    private final Map<String, Supplier<Command<MenuContext>>> commands;
+    // a map of String to a function that takes a context and returns a menu command
+    private final Map<String, Function<MenuContext, Command<MenuContext>>> commands;
 
     public MenuCommandFactory() {
         commands = new HashMap<>();
@@ -25,13 +26,15 @@ public class MenuCommandFactory implements CommandFactory<Command<MenuContext>> 
         commands.put("scores", showScoreboardCommand::new);
     }
 
-
     @Override
-    public Command<MenuContext> fetchCommand(String[] input) {
-        return commands.getOrDefault(input[0], DefaultMenuCommand::new).get();
+    public Command<MenuContext> fetchCommand(MenuContext context) {
+        return commands.getOrDefault(context.getInput()[0], DefaultMenuCommand::new).apply(context);
     }
 
     private static class DefaultMenuCommand implements Command<MenuContext> {
+
+        private DefaultMenuCommand(MenuContext context) {
+        }
 
         @Override
         public void execute() {

@@ -1,5 +1,7 @@
 package com.example.cryptogramgamewithspring.Controllers;
 
+import com.example.cryptogramgamewithspring.Cryptogram.Cryptogram;
+import com.example.cryptogramgamewithspring.Player.Player;
 import com.example.cryptogramgamewithspring.Presentation.InputPrompt;
 import com.example.cryptogramgamewithspring.Presentation.ConsoleView;
 import com.example.cryptogramgamewithspring.Commands.Factories.CommandFactory;
@@ -9,12 +11,17 @@ public class GameplayController implements GameController {
 
     private final ConsoleView view;
     private final InputPrompt prompt;
-    private final CommandFactory<Command<GameContext>> commandFactory;
+    private final CommandFactory<GameContext> commandFactory;
+    private final Cryptogram cryptogram;
+    private final Player player;
 
-    public GameplayController(GameContext context) {
-        this.view = context.getView();
-        this.prompt = context.getPrompt();
-        this.commandFactory = context.getCommands();
+
+    public GameplayController(ConsoleView view, InputPrompt prompt, CommandFactory<GameContext> commandFactory, Cryptogram cryptogram, Player player) {
+        this.view = view;
+        this.prompt = prompt;
+        this.commandFactory = commandFactory;
+        this.cryptogram = cryptogram;
+        this.player = player;
     }
 
     public void mainLoop() {
@@ -33,7 +40,8 @@ public class GameplayController implements GameController {
     }
 
     private boolean executeCommand(String[] input) {
-        Command<GameContext> command = commandFactory.fetchCommand(input);
+        GameContext context = new GameContext(cryptogram, player, view, prompt, commandFactory, input);
+        Command<GameContext> command = commandFactory.fetchCommand(context);
         command.execute();
         setState(command.getState());
         return command.didExit();

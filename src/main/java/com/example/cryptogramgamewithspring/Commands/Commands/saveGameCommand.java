@@ -2,7 +2,9 @@ package com.example.cryptogramgamewithspring.Commands.Commands;
 
 import com.example.cryptogramgamewithspring.Controllers.GameContext;
 
-public class saveGameCommand implements Command {
+public class saveGameCommand implements Command<GameContext> {
+    public saveGameCommand(GameContext context) {
+    }
 
     @Override
     public void execute() {

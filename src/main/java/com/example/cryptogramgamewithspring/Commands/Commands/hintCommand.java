@@ -2,7 +2,10 @@ package com.example.cryptogramgamewithspring.Commands.Commands;
 
 import com.example.cryptogramgamewithspring.Controllers.GameContext;
 
-public class hintCommand implements Command {
+public class hintCommand implements Command<GameContext> {
+
+    public hintCommand(GameContext context) {
+    }
 
     @Override
     public void execute() {

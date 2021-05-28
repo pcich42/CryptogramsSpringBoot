@@ -1,6 +1,5 @@
 package com.example.cryptogramgamewithspring.Controllers;
 
-import com.example.cryptogramgamewithspring.Commands.Commands.Command;
 import com.example.cryptogramgamewithspring.Commands.Factories.CommandFactory;
 import com.example.cryptogramgamewithspring.Cryptogram.Cryptogram;
 import com.example.cryptogramgamewithspring.Player.Player;
@@ -13,14 +12,16 @@ public class GameContext {
     private final Player player;
     private final ConsoleView view;
     private final InputPrompt prompt;
-    private final CommandFactory<Command<GameContext>> commands;
+    private final CommandFactory<GameContext> commands;
+    private final String[] input;
 
-    public GameContext(Cryptogram cryptogram, Player player, ConsoleView view, InputPrompt prompt, CommandFactory<Command<GameContext>> commands) {
+    public GameContext(Cryptogram cryptogram, Player player, ConsoleView view, InputPrompt prompt, CommandFactory<GameContext> commands, String[] input) {
         this.cryptogram = cryptogram;
         this.player = player;
         this.view = view;
         this.prompt = prompt;
         this.commands = commands;
+        this.input = input;
     }
 
     public Cryptogram getCryptogram() {
@@ -39,7 +40,11 @@ public class GameContext {
         return prompt;
     }
 
-    public CommandFactory<Command<GameContext>> getCommands() {
+    public CommandFactory<GameContext> getCommands() {
         return commands;
+    }
+
+    public String[] getInput() {
+        return input;
     }
 }

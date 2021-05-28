@@ -2,7 +2,10 @@ package com.example.cryptogramgamewithspring.Commands.Commands;
 
 import com.example.cryptogramgamewithspring.Controllers.GameContext;
 
-public class showFrequenciesCommand implements Command {
+public class showFrequenciesCommand implements Command<GameContext> {
+
+    public showFrequenciesCommand(GameContext context) {
+    }
 
     @Override
     public void execute() {

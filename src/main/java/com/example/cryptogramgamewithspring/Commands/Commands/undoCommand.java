@@ -2,7 +2,10 @@ package com.example.cryptogramgamewithspring.Commands.Commands;
 
 import com.example.cryptogramgamewithspring.Controllers.GameContext;
 
-public class undoCommand implements Command {
+public class undoCommand implements Command<GameContext> {
+    public undoCommand(GameContext context) {
+    }
+
     @Override
     public void execute() {
     }

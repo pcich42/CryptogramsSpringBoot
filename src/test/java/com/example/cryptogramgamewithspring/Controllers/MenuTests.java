@@ -2,6 +2,7 @@ package com.example.cryptogramgamewithspring.Controllers;
 
 import com.example.cryptogramgamewithspring.Commands.Commands.Command;
 import com.example.cryptogramgamewithspring.Player.InvalidFileFormatException;
+import com.example.cryptogramgamewithspring.Player.Player;
 import com.example.cryptogramgamewithspring.Presentation.*;
 import com.example.cryptogramgamewithspring.Commands.Factories.CommandFactory;
 import com.example.cryptogramgamewithspring.Player.PlayerService;
@@ -32,21 +33,31 @@ public class MenuTests {
     @Mock
     private PlayerService mockPlayers;
     @Mock
-    private CommandFactory<Command<MenuContext>> mockCommandFactory;
+    private CommandFactory<MenuContext> mockMenuCommandFactory;
+    @Mock
+    private CommandFactory<GameContext> mockGameCommandFactory;
 
     private Menu menu;
 
     @BeforeEach
     public void setUp() {
-        MenuContext context = new MenuContext(null, mockPrompt, mockView, mockPlayers, mockCommandFactory);
-        menu = new Menu(context);
+        menu = new Menu(mockPrompt, mockView, mockPlayers, mockMenuCommandFactory, mockGameCommandFactory);
     }
 
     @Test
     void MenuStartsWithMessage() throws Exception {
+        willDoNothing().given(mockPlayers).loadPlayersFromFile();
+        given(mockPrompt.getInput()).willReturn(new String[]{"test_user"});
+        given(mockPlayers.getPlayer(anyString())).willReturn(new Player("test_user"));
         willCallRealMethod().given(mockView).displayMessage(anyString());
         String output = tapSystemOut(menu::run);
-        assertEquals(output.trim(), ">>>>> Welcome to the Cryptograms Game!");
+        assertEquals(">>>>> Welcome to the Cryptograms Game!\n" +
+                "\n" +
+                ">>>>> What is your username?\n" +
+                "\n" +
+                ">>>>> Hello test_user!",
+                output.trim());
+
     }
 
     @Test
@@ -78,7 +89,7 @@ public class MenuTests {
             return null;
         })).given(command1).execute();
 
-        given(mockCommandFactory.fetchCommand(ArgumentMatchers.any()))
+        given(mockMenuCommandFactory.fetchCommand(any()))
                 .willReturn(command1);
 
         withTextFromSystemIn(input[0] + " " + input[1], exitInput[0])
@@ -123,7 +134,7 @@ public class MenuTests {
             return null;
         })).given(command3).execute();
 
-        given(mockCommandFactory.fetchCommand(ArgumentMatchers.any()))
+        given(mockMenuCommandFactory.fetchCommand(any()))
                 .willReturn(command1)
                 .willReturn(command2)
                 .willReturn(command3);

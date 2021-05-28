@@ -4,6 +4,9 @@ import com.example.cryptogramgamewithspring.Controllers.MenuContext;
 
 public class playLoadedCryptogramCommand implements Command<MenuContext> {
 
+    public playLoadedCryptogramCommand(MenuContext context) {
+    }
+
     @Override
     public void execute() {
 

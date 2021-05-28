@@ -2,7 +2,9 @@ package com.example.cryptogramgamewithspring.Commands.Commands;
 
 import com.example.cryptogramgamewithspring.Controllers.GameContext;
 
-public class displayHelpCommand implements Command {
+public class displayHelpCommand implements Command<GameContext> {
+    public displayHelpCommand(GameContext context) {
+    }
 
     @Override
     public void execute() {

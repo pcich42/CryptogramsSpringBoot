@@ -28,7 +28,7 @@ public class GameplayControllerTests {
     @Mock
     private InputPrompt mockPrompt;
     @Mock
-    private CommandFactory<Command<GameContext>> mockCommandFactory;
+    private CommandFactory<GameContext> mockCommandFactory;
     @Mock
     private Cryptogram cryptogram;
     @Mock
@@ -38,8 +38,7 @@ public class GameplayControllerTests {
 
     @BeforeEach
     void setUp() {
-        GameContext context = new GameContext(cryptogram, player, mockView, mockPrompt, mockCommandFactory);
-        gameplay = new GameplayController(context);
+        gameplay = new GameplayController(mockView, mockPrompt, mockCommandFactory, cryptogram, player);
     }
 
     @Test

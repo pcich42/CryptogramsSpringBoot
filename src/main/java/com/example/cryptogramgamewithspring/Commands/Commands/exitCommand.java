@@ -2,7 +2,9 @@ package com.example.cryptogramgamewithspring.Commands.Commands;
 
 import com.example.cryptogramgamewithspring.Controllers.GameContext;
 
-public class exitCommand implements Command {
+public class exitCommand implements Command<GameContext> {
+    public exitCommand(GameContext context) {
+    }
 
     @Override
     public void execute() {

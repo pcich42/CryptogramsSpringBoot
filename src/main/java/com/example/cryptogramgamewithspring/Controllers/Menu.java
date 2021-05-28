@@ -2,7 +2,9 @@ package com.example.cryptogramgamewithspring.Controllers;
 
 import com.example.cryptogramgamewithspring.Commands.Commands.Command;
 import com.example.cryptogramgamewithspring.Commands.Factories.CommandFactory;
+import com.example.cryptogramgamewithspring.Commands.Factories.GameplayCommandFactory;
 import com.example.cryptogramgamewithspring.Player.InvalidFileFormatException;
+import com.example.cryptogramgamewithspring.Player.Player;
 import com.example.cryptogramgamewithspring.Presentation.InputPrompt;
 import com.example.cryptogramgamewithspring.Presentation.ConsoleView;
 import com.example.cryptogramgamewithspring.Player.PlayerService;
@@ -19,17 +21,29 @@ public class Menu implements GameController {
     private final InputPrompt prompt;
     private final ConsoleView view;
     private final PlayerService players;
-    private final CommandFactory<Command<MenuContext>> commandFactory;
+    private final CommandFactory<MenuContext> menuCommandFactory;
+    private final CommandFactory<GameContext> gameCommandFactory;
 
-    public Menu(MenuContext context) {
-        this.prompt = context.getPrompt();
-        this.view = context.getView();
-        this.players = context.getPlayers();
-        this.commandFactory = context.getCommandFactory();
+    @Autowired
+    public Menu(InputPrompt prompt,
+                ConsoleView view,
+                PlayerService players,
+                @Qualifier("MenuCommands") CommandFactory<MenuContext> menuCommandFactory,
+                @Qualifier("GameplayCommands") CommandFactory<GameContext> gameCommandFactory) {
+        this.prompt = prompt;
+        this.view = view;
+        this.players = players;
+        this.menuCommandFactory = menuCommandFactory;
+        this.gameCommandFactory = gameCommandFactory;
     }
 
     public void run() {
         view.displayMessage("Welcome to the Cryptograms Game!");
+        if(!loadPlayers()) return;
+        view.displayMessage("What is your username?");
+        Player player = players.getPlayer(prompt.getInput()[0]);
+        view.displayMessage("Hello " + player.getUsername() + "!");
+
     }
 
     public void mainLoop() {
@@ -42,7 +56,8 @@ public class Menu implements GameController {
     }
 
     private void fetchAndExecuteCommand(String[] input) {
-        Command<MenuContext> command = commandFactory.fetchCommand(input);
+        MenuContext context = new MenuContext(prompt, view, players, gameCommandFactory, input);
+        Command<MenuContext> command = menuCommandFactory.fetchCommand(context);
         command.execute();
     }
 

@@ -2,7 +2,10 @@ package com.example.cryptogramgamewithspring.Commands.Commands;
 
 import com.example.cryptogramgamewithspring.Controllers.GameContext;
 
-public class enterGuessCommand implements Command {
+public class enterGuessCommand implements Command<GameContext> {
+
+    public enterGuessCommand(GameContext context) {
+    }
 
     @Override
     public void execute() {

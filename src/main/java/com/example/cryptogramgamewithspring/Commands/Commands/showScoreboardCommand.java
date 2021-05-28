@@ -3,6 +3,10 @@ package com.example.cryptogramgamewithspring.Commands.Commands;
 import com.example.cryptogramgamewithspring.Controllers.MenuContext;
 
 public class showScoreboardCommand implements Command<MenuContext> {
+
+    public showScoreboardCommand(MenuContext context) {
+    }
+
     @Override
     public void execute() {
 
