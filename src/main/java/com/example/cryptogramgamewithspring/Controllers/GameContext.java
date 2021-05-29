@@ -6,7 +6,7 @@ import com.example.cryptogramgamewithspring.Player.Player;
 import com.example.cryptogramgamewithspring.Presentation.ConsoleView;
 import com.example.cryptogramgamewithspring.Presentation.InputPrompt;
 
-public class GameContext {
+public class GameContext extends Context{
 
     private final Cryptogram cryptogram;
     private final Player player;

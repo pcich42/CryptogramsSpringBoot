@@ -9,11 +9,11 @@ import com.example.cryptogramgamewithspring.Commands.Commands.Command;
 
 public class GameplayController implements GameController {
 
-    private final ConsoleView view;
-    private final InputPrompt prompt;
-    private final CommandFactory<GameContext> commandFactory;
-    private final Cryptogram cryptogram;
-    private final Player player;
+    private ConsoleView view;
+    private InputPrompt prompt;
+    private CommandFactory<GameContext> commandFactory;
+    private Cryptogram cryptogram;
+    private Player player;
 
 
     public GameplayController(ConsoleView view, InputPrompt prompt, CommandFactory<GameContext> commandFactory, Cryptogram cryptogram, Player player) {
@@ -35,7 +35,6 @@ public class GameplayController implements GameController {
             view.displayMessage("Please enter a mapping in format <letter><space><cryptogram value>:");
             String[] input = prompt.getInput();
             isExitRequested = input[0].contains("exit") || executeCommand(input);
-
         }
     }
 
@@ -53,5 +52,7 @@ public class GameplayController implements GameController {
     }
 
     private void setState(GameContext context) {
+//        this.cryptogram = context.getCryptogram();
+//        this.player = context.getPlayer();
     }
 }

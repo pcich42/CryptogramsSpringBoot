@@ -1,6 +1,7 @@
 package com.example.cryptogramgamewithspring.Controllers;
 
 import com.example.cryptogramgamewithspring.Commands.Commands.Command;
+import com.example.cryptogramgamewithspring.Cryptogram.CryptogramRepository;
 import com.example.cryptogramgamewithspring.Player.InvalidFileFormatException;
 import com.example.cryptogramgamewithspring.Player.Player;
 import com.example.cryptogramgamewithspring.Presentation.*;
@@ -9,7 +10,6 @@ import com.example.cryptogramgamewithspring.Player.PlayerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -36,12 +36,14 @@ public class MenuTests {
     private CommandFactory<MenuContext> mockMenuCommandFactory;
     @Mock
     private CommandFactory<GameContext> mockGameCommandFactory;
+    @Mock
+    private CryptogramRepository cryptogramRepository;
 
     private Menu menu;
 
     @BeforeEach
     public void setUp() {
-        menu = new Menu(mockPrompt, mockView, mockPlayers, mockMenuCommandFactory, mockGameCommandFactory);
+        menu = new Menu(mockPrompt, mockView, mockPlayers, mockMenuCommandFactory, mockGameCommandFactory, cryptogramRepository);
     }
 
     @Test
