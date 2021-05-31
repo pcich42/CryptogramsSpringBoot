@@ -101,10 +101,10 @@ public class PlayersServiceTests {
         playerService.addPlayer(player2);
         playerService.addPlayer(player3);
 
-        SortedMap<Double, Player> accuracies = new TreeMap<>();
-        accuracies.put(3.0, player1);
-        accuracies.put(50.0, player2);
-        accuracies.put(99.0, player3);
+        Map<Player, Double> accuracies = new HashMap<>();
+        accuracies.put(player1, 3.0);
+        accuracies.put(player2, 50.0);
+        accuracies.put(player3, 99.0);
 
         assertEquals(accuracies, playerService.getAccuracies());
 

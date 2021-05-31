@@ -18,7 +18,7 @@ public class PlayerService {
         this.players = new HashSet<>();
     }
 
-    public void loadPlayersFromFile() throws InvalidFileFormatException, IOException {
+    public void loadPlayersFromFile() throws IOException {
         this.players = repository.getPlayers();
     }
 
@@ -32,9 +32,9 @@ public class PlayerService {
         return players.add(player);
     }
 
-    public SortedMap<Double, Player> getAccuracies() {
-        SortedMap<Double, Player> accuracies = new TreeMap<>();
-        players.forEach((player) -> accuracies.put(player.getAccuracy(), player));
+    public Map<Player, Double> getAccuracies() {
+        Map<Player, Double> accuracies = new HashMap<>();
+        players.forEach((player) -> accuracies.put(player, player.getAccuracy()));
         return accuracies;
     }
 

@@ -1,6 +1,5 @@
 package com.example.cryptogramgamewithspring;
 
-import com.example.cryptogramgamewithspring.Controllers.GameController;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -19,7 +18,7 @@ public class Runner implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        GameController game = context.getBean(Menu.class);
+        var game = context.getBean(Menu.class);
         game.mainLoop();
     }
 }

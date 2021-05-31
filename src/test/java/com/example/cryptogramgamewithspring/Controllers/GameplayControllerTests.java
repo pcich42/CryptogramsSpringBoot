@@ -1,11 +1,9 @@
 package com.example.cryptogramgamewithspring.Controllers;
 
-import com.example.cryptogramgamewithspring.Cryptogram.Cryptogram;
-import com.example.cryptogramgamewithspring.Player.Player;
-import com.example.cryptogramgamewithspring.Presentation.InputPrompt;
+import com.example.cryptogramgamewithspring.Controllers.Commands.Command;
+import com.example.cryptogramgamewithspring.Controllers.Commands.CommandSupplier.CommandSupplier;
+import com.example.cryptogramgamewithspring.Player.PlayerService;
 import com.example.cryptogramgamewithspring.Presentation.ConsoleView;
-import com.example.cryptogramgamewithspring.Commands.Factories.CommandFactory;
-import com.example.cryptogramgamewithspring.Commands.Commands.Command;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,19 +24,15 @@ public class GameplayControllerTests {
     @Mock
     private ConsoleView mockView;
     @Mock
-    private InputPrompt mockPrompt;
+    private CommandSupplier commandSupplier;
     @Mock
-    private CommandFactory<GameContext> mockCommandFactory;
-    @Mock
-    private Cryptogram cryptogram;
-    @Mock
-    private Player player;
+    private PlayerService playerService;
 
     private GameplayController gameplay;
 
     @BeforeEach
     void setUp() {
-        gameplay = new GameplayController(mockView, mockPrompt, mockCommandFactory, cryptogram, player);
+        gameplay = new GameplayController(mockView, playerService, commandSupplier);
     }
 
     @Test
@@ -46,7 +40,7 @@ public class GameplayControllerTests {
         String[] inputExit = {"exit"};
         willCallRealMethod().given(mockView).displayMessage(anyString());
 
-        given(mockPrompt.getInput())
+        given(mockView.getInput())
                 .willReturn(inputExit);
 
         withTextFromSystemIn(inputExit)
@@ -63,11 +57,11 @@ public class GameplayControllerTests {
     }
 
     @Test
-    void givenMenuIsRunning_WhenUserInputsACommandWithArguments_CommandIsExecuted(@Mock Command<GameContext> command1) throws Exception {
+    void givenMenuIsRunning_WhenUserInputsACommandWithArguments_CommandIsExecuted(@Mock Command command1) throws Exception {
         String[] input = {"command", "argument"};
         String[] exitInput = {"exit"};
         willCallRealMethod().given(mockView).displayMessage(anyString());
-        given(mockPrompt.getInput())
+        given(mockView.getInput())
                 .willReturn(input)
                 .willReturn(exitInput);
 
@@ -76,7 +70,7 @@ public class GameplayControllerTests {
             return null;
         })).given(command1).execute();
 
-        given(mockCommandFactory.fetchCommand(any()))
+        given(commandSupplier.fetchCommand(any(), any()))
                 .willReturn(command1);
 
         withTextFromSystemIn(input[0] + " " + input[1], exitInput[0])
@@ -98,15 +92,15 @@ public class GameplayControllerTests {
     }
 
     @Test
-    void WhenUserInputsMultipleCommandsWithArguments_CommandsAreExecuted(@Mock Command<GameContext> command1,
-                                                                         @Mock Command<GameContext> command2,
-                                                                         @Mock Command<GameContext> command3
+    void WhenUserInputsMultipleCommandsWithArguments_CommandsAreExecuted(@Mock Command command1,
+                                                                         @Mock Command command2,
+                                                                         @Mock Command command3
     ) throws Exception {
         String[] inputOne = {"one", "argument_one"};
         String[] inputTwo = {"two", "argument_two"};
         String[] inputThree = {"three"};
         String[] exitInput = {"exit"};
-        given(mockPrompt.getInput())
+        given(mockView.getInput())
                 .willReturn(inputOne)
                 .willReturn(inputTwo)
                 .willReturn(inputThree)
@@ -127,7 +121,7 @@ public class GameplayControllerTests {
             return null;
         })).given(command3).execute();
 
-        given(mockCommandFactory.fetchCommand(any()))
+        given(commandSupplier.fetchCommand(any(), any()))
                 .willReturn(command1)
                 .willReturn(command2)
                 .willReturn(command3);

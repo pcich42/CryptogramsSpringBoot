@@ -1,4 +1,6 @@
 package com.example.cryptogramgamewithspring.Player;
 
-public class InvalidFileFormatException extends Exception {
+import java.io.IOException;
+
+public class InvalidFileFormatException extends IOException {
 }

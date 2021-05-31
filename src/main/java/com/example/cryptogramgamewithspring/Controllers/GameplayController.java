@@ -1,27 +1,29 @@
 package com.example.cryptogramgamewithspring.Controllers;
 
+import com.example.cryptogramgamewithspring.Controllers.Commands.*;
+import com.example.cryptogramgamewithspring.Controllers.Commands.CommandSupplier.CommandSupplier;
 import com.example.cryptogramgamewithspring.Cryptogram.Cryptogram;
 import com.example.cryptogramgamewithspring.Player.Player;
-import com.example.cryptogramgamewithspring.Presentation.InputPrompt;
+import com.example.cryptogramgamewithspring.Player.PlayerService;
 import com.example.cryptogramgamewithspring.Presentation.ConsoleView;
-import com.example.cryptogramgamewithspring.Commands.Factories.CommandFactory;
-import com.example.cryptogramgamewithspring.Commands.Commands.Command;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
-public class GameplayController implements GameController {
+@Component
+public class GameplayController extends ConsoleCommandController {
 
-    private ConsoleView view;
-    private InputPrompt prompt;
-    private CommandFactory<GameContext> commandFactory;
-    private Cryptogram cryptogram;
+    private final ConsoleView view;
+    private final PlayerService playerService;
+    private final CommandSupplier supplier;
     private Player player;
+    private Cryptogram cryptogram;
 
-
-    public GameplayController(ConsoleView view, InputPrompt prompt, CommandFactory<GameContext> commandFactory, Cryptogram cryptogram, Player player) {
+    @Autowired
+    public GameplayController(ConsoleView view, PlayerService playerService, @Qualifier("GameplayCommands") CommandSupplier supplier) {
         this.view = view;
-        this.prompt = prompt;
-        this.commandFactory = commandFactory;
-        this.cryptogram = cryptogram;
-        this.player = player;
+        this.playerService = playerService;
+        this.supplier = supplier;
     }
 
     public void mainLoop() {
@@ -33,26 +35,27 @@ public class GameplayController implements GameController {
 
             view.displayMessage("Type help to list all available commands.");
             view.displayMessage("Please enter a mapping in format <letter><space><cryptogram value>:");
-            String[] input = prompt.getInput();
+            String[] input = view.getInput();
             isExitRequested = input[0].contains("exit") || executeCommand(input);
         }
     }
 
     private boolean executeCommand(String[] input) {
-        GameContext context = new GameContext(cryptogram, player, view, prompt, commandFactory, input);
-        Command<GameContext> command = commandFactory.fetchCommand(context);
+        Command command = supplier.fetchCommand(input, player);
         command.execute();
-        setState(command.getState());
         return command.didExit();
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
+    public void setCryptogram(Cryptogram cryptogram) {
+        this.cryptogram = cryptogram;
     }
 
     @Override
     public void run() {
 
-    }
-
-    private void setState(GameContext context) {
-//        this.cryptogram = context.getCryptogram();
-//        this.player = context.getPlayer();
     }
 }

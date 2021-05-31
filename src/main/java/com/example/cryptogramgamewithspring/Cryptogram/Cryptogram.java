@@ -26,4 +26,5 @@ public class Cryptogram {
     public boolean valueHasMapping(String value) {
         return true;
     }
+
 }

@@ -1,6 +1,5 @@
 package com.example.cryptogramgamewithspring.Presentation;
 
-import com.example.cryptogramgamewithspring.Presentation.InputPrompt;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import uk.org.webcompere.systemstubs.jupiter.SystemStubsExtension;
@@ -12,15 +11,15 @@ import static uk.org.webcompere.systemstubs.SystemStubs.withTextFromSystemIn;
 @ExtendWith(SystemStubsExtension.class)
 public class inputPromptTests {
 
-    private InputPrompt prompt;
+    private ConsoleView view;
 
     @Test
     void getInputReturnsPassedInputAsArraySeparatedOnSpaces() throws Exception {
         String input = "I very ' much; liKe ,your hairstyle]/ (today) Mrs. Blue!";
         withTextFromSystemIn(input).
                 execute(() -> {
-                    prompt = new InputPrompt();
-                    String[] output = prompt.getInput();
+                    view = new ConsoleView();
+                    String[] output = view.getInput();
                     assertArrayEquals(new String[] {
                             "i",
                             "very",
@@ -41,8 +40,8 @@ public class inputPromptTests {
         String input = "yes";
         withTextFromSystemIn(input)
                 .execute(() -> {
-                    prompt = new InputPrompt();
-                    assertTrue(prompt.confirmChoice());
+                    view = new ConsoleView();
+                    assertTrue(view.confirmChoice());
                 });
     }
 
@@ -51,8 +50,8 @@ public class inputPromptTests {
         String input = "no";
         withTextFromSystemIn(input)
                 .execute(() -> {
-                    prompt = new InputPrompt();
-                    assertFalse(prompt.confirmChoice());
+                    view = new ConsoleView();
+                    assertFalse(view.confirmChoice());
                 });
     }
 
@@ -62,8 +61,8 @@ public class inputPromptTests {
         String line2 = "no";
         withTextFromSystemIn(line1, line2)
                 .execute(() -> {
-                    prompt = new InputPrompt();
-                    String output = tapSystemOut(prompt::confirmChoice);
+                    view = new ConsoleView();
+                    String output = tapSystemOut(view::confirmChoice);
                     assertTrue(output.contains("Invalid response, try again with \"yes\" or \"no\" "));
                 });
     }

@@ -46,7 +46,7 @@ public class FilePlayerRepository implements PlayerRepository {
         return file;
     }
 
-    public Set<Player> getPlayers() throws IOException, InvalidFileFormatException {
+    public Set<Player> getPlayers() throws IOException {
         Set<Player> players = new HashSet<>();
 
         BufferedReader reader = new BufferedReader(new FileReader(filepath));

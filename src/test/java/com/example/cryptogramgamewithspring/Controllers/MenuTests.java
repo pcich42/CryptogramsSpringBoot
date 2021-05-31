@@ -1,12 +1,11 @@
 package com.example.cryptogramgamewithspring.Controllers;
 
-import com.example.cryptogramgamewithspring.Commands.Commands.Command;
-import com.example.cryptogramgamewithspring.Cryptogram.CryptogramRepository;
+import com.example.cryptogramgamewithspring.Controllers.Commands.Command;
+import com.example.cryptogramgamewithspring.Controllers.Commands.CommandSupplier.CommandSupplier;
 import com.example.cryptogramgamewithspring.Player.InvalidFileFormatException;
 import com.example.cryptogramgamewithspring.Player.Player;
-import com.example.cryptogramgamewithspring.Presentation.*;
-import com.example.cryptogramgamewithspring.Commands.Factories.CommandFactory;
 import com.example.cryptogramgamewithspring.Player.PlayerService;
+import com.example.cryptogramgamewithspring.Presentation.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,31 +24,24 @@ import static uk.org.webcompere.systemstubs.SystemStubs.*;
 
 @ExtendWith(MockitoExtension.class)
 public class MenuTests {
-
-    @Mock
-    private InputPrompt mockPrompt;
     @Mock
     private ConsoleView mockView;
     @Mock
     private PlayerService mockPlayers;
     @Mock
-    private CommandFactory<MenuContext> mockMenuCommandFactory;
-    @Mock
-    private CommandFactory<GameContext> mockGameCommandFactory;
-    @Mock
-    private CryptogramRepository cryptogramRepository;
+    private CommandSupplier commandSupplier;
 
     private Menu menu;
 
     @BeforeEach
     public void setUp() {
-        menu = new Menu(mockPrompt, mockView, mockPlayers, mockMenuCommandFactory, mockGameCommandFactory, cryptogramRepository);
+        menu = new Menu(mockView, mockPlayers, commandSupplier);
     }
 
     @Test
     void MenuStartsWithMessage() throws Exception {
         willDoNothing().given(mockPlayers).loadPlayersFromFile();
-        given(mockPrompt.getInput()).willReturn(new String[]{"test_user"});
+        given(mockView.getInput()).willReturn(new String[]{"test_user"});
         given(mockPlayers.getPlayer(anyString())).willReturn(new Player("test_user"));
         willCallRealMethod().given(mockView).displayMessage(anyString());
         String output = tapSystemOut(menu::run);
@@ -66,7 +58,7 @@ public class MenuTests {
     void givenMenuIsRunning_UserInputsExit_GameQuits() throws Exception {
         String[] inputExit = {"exit"};
         willCallRealMethod().given(mockView).displayMessage(anyString());
-        given(mockPrompt.getInput())
+        given(mockView.getInput())
                 .willReturn(inputExit);
 
         withTextFromSystemIn(inputExit)
@@ -78,11 +70,11 @@ public class MenuTests {
     }
 
     @Test
-    void givenMenuIsRunning_WhenUserInputsACommandWithArguments_CommandIsExecuted(@Mock Command<MenuContext> command1) throws Exception {
+    void givenMenuIsRunning_WhenUserInputsACommandWithArguments_CommandIsExecuted(@Mock Command command1) throws Exception {
         String[] input = {"command", "argument"};
         String[] exitInput = {"exit"};
         willCallRealMethod().given(mockView).displayMessage(anyString());
-        given(mockPrompt.getInput())
+        given(mockView.getInput())
                 .willReturn(input)
                 .willReturn(exitInput);
 
@@ -91,7 +83,7 @@ public class MenuTests {
             return null;
         })).given(command1).execute();
 
-        given(mockMenuCommandFactory.fetchCommand(any()))
+        given(commandSupplier.fetchCommand(any(), any()))
                 .willReturn(command1);
 
         withTextFromSystemIn(input[0] + " " + input[1], exitInput[0])
@@ -108,14 +100,14 @@ public class MenuTests {
     }
 
     @Test
-    void givenMenuIsRunning_WhenUserInputsMultipleCommandsWithArguments_CommandsAreExecuted(@Mock Command<MenuContext> command1,
-                                                                                            @Mock Command<MenuContext> command2,
-                                                                                            @Mock Command<MenuContext> command3) throws Exception {
+    void givenMenuIsRunning_WhenUserInputsMultipleCommandsWithArguments_CommandsAreExecuted(@Mock Command command1,
+                                                                                            @Mock Command command2,
+                                                                                            @Mock Command command3) throws Exception {
         String[] inputOne = {"one", "argument_one"};
         String[] inputTwo = {"two", "argument_two"};
         String[] inputThree = {"three"};
         String[] exitInput = {"exit"};
-        given(mockPrompt.getInput())
+        given(mockView.getInput())
                 .willReturn(inputOne)
                 .willReturn(inputTwo)
                 .willReturn(inputThree)
@@ -136,7 +128,7 @@ public class MenuTests {
             return null;
         })).given(command3).execute();
 
-        given(mockMenuCommandFactory.fetchCommand(any()))
+        given(commandSupplier.fetchCommand(any(), any()))
                 .willReturn(command1)
                 .willReturn(command2)
                 .willReturn(command3);
