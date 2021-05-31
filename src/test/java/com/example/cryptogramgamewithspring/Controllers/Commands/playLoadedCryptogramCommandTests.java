@@ -1,5 +1,7 @@
 package com.example.cryptogramgamewithspring.Controllers.Commands;
 
+import com.example.cryptogramgamewithspring.Controllers.Commands.CommandSupplier.CommandSupplier;
+import com.example.cryptogramgamewithspring.Controllers.Commands.CommandSupplier.GameContext;
 import com.example.cryptogramgamewithspring.Controllers.GameplayController;
 import com.example.cryptogramgamewithspring.Cryptogram.Cryptogram;
 import com.example.cryptogramgamewithspring.Cryptogram.CryptogramRepository;
@@ -24,29 +26,34 @@ import static uk.org.webcompere.systemstubs.SystemStubs.tapSystemOut;
 public class playLoadedCryptogramCommandTests {
 
     @Mock
-    private GameplayController gameplayController;
-    @Mock
     private ConsoleView mockView;
     @Mock
     private CryptogramRepository cryptogramRepository;
     @Mock
     private Player player;
+    @Mock
+    private CommandSupplier<GameContext> supplier;
 
     @Test
-    void givenUserExecutesLoadGame_whenEverythingIsFineWithCryptogramRepo_ThenCryptogramIsLoadedAndGameLaunches() throws IOException {
+    void givenUserExecutesLoadGame_whenEverythingIsFineWithCryptogramRepo_ThenCryptogramIsLoadedAndGameLaunches() throws Exception {
 
         //given
-        given(player.getUsername()).willReturn("test_user");
+        String username = "test_user";
+        given(player.getUsername()).willReturn(username);
         given(cryptogramRepository.loadCryptogram(anyString())).willReturn(Optional.of(new Cryptogram("a")));
-        willDoNothing().given(gameplayController).mainLoop();
+        given(mockView.getInput()).willReturn(new String[]{"exit"});
+        willCallRealMethod().given(mockView).displayMessage(anyString());
 
         // when
-        playLoadedCryptogramCommand command = new playLoadedCryptogramCommand(gameplayController, mockView, cryptogramRepository, player);
-        command.execute();
+        playLoadedCryptogramCommand command = new playLoadedCryptogramCommand(mockView, cryptogramRepository, player, supplier);
+        String output = tapSystemOut(command::execute);
+        assertEquals(">>>>> Type help to list all available commands.\n" +
+                "\n" +
+                ">>>>> Please enter a mapping in format <letter><space><cryptogram value>:\n" +
+                "\n", output);
 
         // then
-        verify(cryptogramRepository).loadCryptogram(anyString());
-        verify(gameplayController).mainLoop();
+        verify(cryptogramRepository).loadCryptogram(username);
     }
 
     @Test
@@ -58,7 +65,7 @@ public class playLoadedCryptogramCommandTests {
         given(cryptogramRepository.loadCryptogram(any())).willReturn(Optional.empty());
 
         // when
-        playLoadedCryptogramCommand command = new playLoadedCryptogramCommand(gameplayController, mockView, cryptogramRepository, player);
+        playLoadedCryptogramCommand command = new playLoadedCryptogramCommand(mockView, cryptogramRepository, player, supplier);
         String output = tapSystemOut(command::execute);
         assertEquals(">>>>> No cryptogram stored, Try creating a new one.\n\n", output);
 
@@ -75,7 +82,7 @@ public class playLoadedCryptogramCommandTests {
         given(cryptogramRepository.loadCryptogram(any())).willThrow(InvalidFileFormatException.class);
 
         // when
-        playLoadedCryptogramCommand command = new playLoadedCryptogramCommand(gameplayController, mockView, cryptogramRepository, player);
+        playLoadedCryptogramCommand command = new playLoadedCryptogramCommand(mockView, cryptogramRepository, player, supplier);
         String output = tapSystemOut(command::execute);
         assertEquals(">>>>> File is corrupted. Either remove the file manually or play and save a new game to be able to load.\n\n", output);
 

@@ -2,11 +2,11 @@ package com.example.cryptogramgamewithspring.Controllers;
 
 import com.example.cryptogramgamewithspring.Controllers.Commands.*;
 import com.example.cryptogramgamewithspring.Controllers.Commands.CommandSupplier.CommandSupplier;
+import com.example.cryptogramgamewithspring.Controllers.Commands.CommandSupplier.MenuContext;
 import com.example.cryptogramgamewithspring.Player.Player;
 import com.example.cryptogramgamewithspring.Presentation.ConsoleView;
 import com.example.cryptogramgamewithspring.Player.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.io.FileNotFoundException;
@@ -18,13 +18,13 @@ public class Menu extends ConsoleCommandController {
 
     private final ConsoleView view;
     private final PlayerService players;
-    private final CommandSupplier supplier;
+    private final CommandSupplier<MenuContext> supplier;
     private Player player;
 
     @Autowired
     public Menu(ConsoleView view,
                 PlayerService players,
-                @Qualifier("MenuCommands") CommandSupplier supplier) {
+                CommandSupplier<MenuContext> supplier) {
         this.view = view;
         this.players = players;
         this.supplier = supplier;
@@ -59,7 +59,8 @@ public class Menu extends ConsoleCommandController {
     }
 
     private void fetchAndExecuteCommand(String[] input) {
-        Command command = supplier.fetchCommand(input, player);
+        MenuContext context = new MenuContext(player, input);
+        Command command = supplier.fetchCommand(input[0], context);
         command.execute();
     }
 

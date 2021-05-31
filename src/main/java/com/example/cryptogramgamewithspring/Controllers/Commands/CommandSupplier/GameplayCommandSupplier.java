@@ -1,8 +1,6 @@
 package com.example.cryptogramgamewithspring.Controllers.Commands.CommandSupplier;
 
 import com.example.cryptogramgamewithspring.Controllers.Commands.*;
-import com.example.cryptogramgamewithspring.Player.Player;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -10,10 +8,9 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Component
-@Qualifier("GameplayCommands")
-public class GameplayCommandSupplier implements CommandSupplier {
+public class GameplayCommandSupplier implements CommandSupplier<GameContext> {
 
-    private final Map<String, Function<String[], Command>> commands;
+    private final Map<String, Function<GameContext, Command>> commands;
 
     public GameplayCommandSupplier() {
         this.commands = new HashMap<>();
@@ -28,7 +25,7 @@ public class GameplayCommandSupplier implements CommandSupplier {
     }
 
     @Override
-    public Command fetchCommand(String[] input, Player player) {
-        return commands.getOrDefault(input[0], enterGuessCommand::new).apply(input);
+    public Command fetchCommand(String command, GameContext context) {
+        return commands.getOrDefault(command, enterGuessCommand::new).apply(context);
     }
 }

@@ -1,5 +1,7 @@
 package com.example.cryptogramgamewithspring.Controllers.Commands;
 
+import com.example.cryptogramgamewithspring.Controllers.Commands.CommandSupplier.CommandSupplier;
+import com.example.cryptogramgamewithspring.Controllers.Commands.CommandSupplier.GameContext;
 import com.example.cryptogramgamewithspring.Controllers.GameplayController;
 import com.example.cryptogramgamewithspring.Cryptogram.Cryptogram;
 import com.example.cryptogramgamewithspring.Cryptogram.CryptogramRepository;
@@ -11,18 +13,18 @@ import java.util.Optional;
 
 public class playGeneratedCryptogramCommand implements Command {
 
-    private final GameplayController game;
     private final ConsoleView view;
     private final CryptogramRepository cryptogramRepository;
     private final Player player;
     private final String[] input;
+    private final CommandSupplier<GameContext> supplier;
 
-    public playGeneratedCryptogramCommand(GameplayController game, ConsoleView view, CryptogramRepository cryptogramRepository, Player player, String[] input) {
-        this.game = game;
+    public playGeneratedCryptogramCommand(ConsoleView view, CryptogramRepository cryptogramRepository, Player player, String[] input, CommandSupplier<GameContext> supplier) {
         this.view = view;
         this.cryptogramRepository = cryptogramRepository;
         this.player = player;
         this.input = input;
+        this.supplier = supplier;
     }
 
     @Override
@@ -56,8 +58,7 @@ public class playGeneratedCryptogramCommand implements Command {
     }
 
     private void present(Cryptogram cryptogram) {
-        game.setPlayer(player);
-        game.setCryptogram(cryptogram);
+        GameplayController game = new GameplayController(supplier, view, cryptogram, player);
         game.mainLoop();
     }
 

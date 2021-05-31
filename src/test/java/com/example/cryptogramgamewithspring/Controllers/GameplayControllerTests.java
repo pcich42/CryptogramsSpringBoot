@@ -2,7 +2,9 @@ package com.example.cryptogramgamewithspring.Controllers;
 
 import com.example.cryptogramgamewithspring.Controllers.Commands.Command;
 import com.example.cryptogramgamewithspring.Controllers.Commands.CommandSupplier.CommandSupplier;
-import com.example.cryptogramgamewithspring.Player.PlayerService;
+import com.example.cryptogramgamewithspring.Controllers.Commands.CommandSupplier.GameContext;
+import com.example.cryptogramgamewithspring.Cryptogram.Cryptogram;
+import com.example.cryptogramgamewithspring.Player.Player;
 import com.example.cryptogramgamewithspring.Presentation.ConsoleView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,15 +26,17 @@ public class GameplayControllerTests {
     @Mock
     private ConsoleView mockView;
     @Mock
-    private CommandSupplier commandSupplier;
+    private Cryptogram cryptogram;
     @Mock
-    private PlayerService playerService;
+    private Player player;
+    @Mock
+    private CommandSupplier<GameContext> commandSupplier;
 
     private GameplayController gameplay;
 
     @BeforeEach
     void setUp() {
-        gameplay = new GameplayController(mockView, playerService, commandSupplier);
+        gameplay = new GameplayController(commandSupplier, mockView, cryptogram, player);
     }
 
     @Test

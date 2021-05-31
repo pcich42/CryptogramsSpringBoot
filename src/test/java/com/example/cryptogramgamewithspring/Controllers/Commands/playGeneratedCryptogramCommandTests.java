@@ -1,5 +1,7 @@
 package com.example.cryptogramgamewithspring.Controllers.Commands;
 
+import com.example.cryptogramgamewithspring.Controllers.Commands.CommandSupplier.CommandSupplier;
+import com.example.cryptogramgamewithspring.Controllers.Commands.CommandSupplier.GameContext;
 import com.example.cryptogramgamewithspring.Controllers.GameplayController;
 import com.example.cryptogramgamewithspring.Cryptogram.Cryptogram;
 import com.example.cryptogramgamewithspring.Cryptogram.CryptogramRepository;
@@ -25,33 +27,36 @@ import static uk.org.webcompere.systemstubs.SystemStubs.tapSystemOut;
 class playGeneratedCryptogramCommandTests {
 
     @Mock
-    private GameplayController gameplayController;
-    @Mock
     private ConsoleView mockView;
     @Mock
     private CryptogramRepository cryptogramRepository;
     @Mock
     private Player player;
+    @Mock
+    private CommandSupplier<GameContext> supplier;
 
     @ParameterizedTest
     @CsvSource({"new letters, letters",
             "new, letters",
-            "new numbers, numbers",
-            "new aa, invalid"})
-    void givenUserExecutesNewGame_whenEverythingIsFineWithCryptogramRepo_ThenCryptogramIsGeneratedAndGameLaunches(String input, String output) throws IOException {
+            "new numbers, numbers",})
+    void givenUserExecutesNewGame_whenEverythingIsFineWithCryptogramRepo_ThenCryptogramIsGeneratedAndGameLaunches(String input, String cryptogramType) throws Exception {
 
         //given
         String[] initialCommand = input.split(" ");
         given(cryptogramRepository.generateCryptogram(any())).willReturn(Optional.of(new Cryptogram("a")));
-        willDoNothing().given(gameplayController).mainLoop();
+        given(mockView.getInput()).willReturn(new String[]{"exit"});
+        willCallRealMethod().given(mockView).displayMessage(anyString());
 
         // when
-        playGeneratedCryptogramCommand command = new playGeneratedCryptogramCommand(gameplayController, mockView, cryptogramRepository, player, initialCommand);
-        command.execute();
+        playGeneratedCryptogramCommand command = new playGeneratedCryptogramCommand(mockView, cryptogramRepository, player, initialCommand, supplier);
+        String output = tapSystemOut(command::execute);
+        assertEquals(">>>>> Type help to list all available commands.\n" +
+                "\n" +
+                ">>>>> Please enter a mapping in format <letter><space><cryptogram value>:\n" +
+                "\n", output);
 
         // then
-        verify(cryptogramRepository).generateCryptogram(output);
-        verify(gameplayController).mainLoop();
+        verify(cryptogramRepository).generateCryptogram(cryptogramType);
     }
 
     @Test
@@ -63,7 +68,7 @@ class playGeneratedCryptogramCommandTests {
         given(cryptogramRepository.generateCryptogram(any())).willThrow(IOException.class);
 
         // when
-        playGeneratedCryptogramCommand command = new playGeneratedCryptogramCommand(gameplayController, mockView, cryptogramRepository, player, initialCommand);
+        playGeneratedCryptogramCommand command = new playGeneratedCryptogramCommand(mockView, cryptogramRepository, player, initialCommand, supplier);
         String output = tapSystemOut(command::execute);
         assertEquals(">>>>> Couldn't generate Cryptogram.\n\n", output);
 
@@ -81,7 +86,7 @@ class playGeneratedCryptogramCommandTests {
         given(cryptogramRepository.generateCryptogram("invalid")).willReturn(Optional.empty());
 
         // when
-        playGeneratedCryptogramCommand command = new playGeneratedCryptogramCommand(gameplayController, mockView, cryptogramRepository, player, initialCommand);
+        playGeneratedCryptogramCommand command = new playGeneratedCryptogramCommand(mockView, cryptogramRepository, player, initialCommand, supplier);
         String output = tapSystemOut(command::execute);
         assertEquals(">>>>> Unexpected cryptogram type. Try letters or numbers.\n\n", output);
 

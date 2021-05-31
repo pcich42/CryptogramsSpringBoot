@@ -1,24 +1,25 @@
 package com.example.cryptogramgamewithspring.Controllers.Commands.CommandSupplier;
 
 import com.example.cryptogramgamewithspring.Controllers.Commands.*;
-import com.example.cryptogramgamewithspring.Player.Player;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
 public class GameplayCommandSupplierTests {
 
     @Mock
-    Player player;
+    private GameContext context;
 
     private final GameplayCommandSupplier factory = new GameplayCommandSupplier();
 
     private Command getCommand(String[] input) {
-        return factory.fetchCommand(input, player);
+//        given(context.getInput()).willReturn(input);
+        return factory.fetchCommand(input[0], context);
     }
 
     @Test

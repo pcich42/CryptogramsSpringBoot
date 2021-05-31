@@ -1,5 +1,7 @@
 package com.example.cryptogramgamewithspring.Controllers.Commands;
 
+import com.example.cryptogramgamewithspring.Controllers.Commands.CommandSupplier.CommandSupplier;
+import com.example.cryptogramgamewithspring.Controllers.Commands.CommandSupplier.GameContext;
 import com.example.cryptogramgamewithspring.Controllers.GameplayController;
 import com.example.cryptogramgamewithspring.Cryptogram.Cryptogram;
 import com.example.cryptogramgamewithspring.Cryptogram.CryptogramRepository;
@@ -12,13 +14,17 @@ import java.util.Optional;
 
 public class playLoadedCryptogramCommand implements Command {
 
-    private final GameplayController game;
+    private final CommandSupplier<GameContext> supplier;
     private final ConsoleView view;
     private final CryptogramRepository cryptogramRepository;
     private final Player player;
 
-    public playLoadedCryptogramCommand(GameplayController game, ConsoleView view, CryptogramRepository cryptogramRepository, Player player) {
-        this.game = game;
+
+    public playLoadedCryptogramCommand(ConsoleView view,
+                                       CryptogramRepository cryptogramRepository,
+                                       Player player,
+                                       CommandSupplier<GameContext> supplier) {
+        this.supplier = supplier;
         this.view = view;
         this.cryptogramRepository = cryptogramRepository;
         this.player = player;
@@ -41,8 +47,7 @@ public class playLoadedCryptogramCommand implements Command {
     }
 
     private void present(Cryptogram cryptogram) {
-        game.setCryptogram(cryptogram);
-        game.setPlayer(player);
+        GameplayController game = new GameplayController(supplier, view, cryptogram, player);
         game.mainLoop();
     }
 

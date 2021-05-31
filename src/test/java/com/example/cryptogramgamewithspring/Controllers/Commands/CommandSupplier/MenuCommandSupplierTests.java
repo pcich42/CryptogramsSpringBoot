@@ -4,7 +4,6 @@ import com.example.cryptogramgamewithspring.Controllers.Commands.Command;
 import com.example.cryptogramgamewithspring.Controllers.Commands.playGeneratedCryptogramCommand;
 import com.example.cryptogramgamewithspring.Controllers.Commands.playLoadedCryptogramCommand;
 import com.example.cryptogramgamewithspring.Controllers.Commands.showScoreboardCommand;
-import com.example.cryptogramgamewithspring.Controllers.GameplayController;
 import com.example.cryptogramgamewithspring.Cryptogram.CryptogramRepository;
 import com.example.cryptogramgamewithspring.Player.Player;
 import com.example.cryptogramgamewithspring.Player.PlayerService;
@@ -20,20 +19,20 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class MenuCommandSupplierTests {
 
     @Mock
-    private Player player;
-    @Mock
     private ConsoleView view;
-    @Mock
-    private GameplayController gameplayController;
     @Mock
     private CryptogramRepository cryptogramRepository;
     @Mock
     private PlayerService playerService;
+    @Mock
+    private CommandSupplier<GameContext> commandSupplier;
+    @Mock
+    private MenuContext context;
 
-    private final MenuCommandSupplier factory = new MenuCommandSupplier(view, gameplayController, cryptogramRepository, playerService);
+    private final MenuCommandSupplier factory = new MenuCommandSupplier(view, cryptogramRepository, playerService, commandSupplier);
 
     private Command getCommand(String[] input) {
-        return factory.fetchCommand(input, player);
+        return factory.fetchCommand(input[0], context);
     }
 
     @Test

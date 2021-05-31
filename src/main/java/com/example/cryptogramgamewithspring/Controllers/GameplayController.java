@@ -2,28 +2,23 @@ package com.example.cryptogramgamewithspring.Controllers;
 
 import com.example.cryptogramgamewithspring.Controllers.Commands.*;
 import com.example.cryptogramgamewithspring.Controllers.Commands.CommandSupplier.CommandSupplier;
+import com.example.cryptogramgamewithspring.Controllers.Commands.CommandSupplier.GameContext;
 import com.example.cryptogramgamewithspring.Cryptogram.Cryptogram;
 import com.example.cryptogramgamewithspring.Player.Player;
-import com.example.cryptogramgamewithspring.Player.PlayerService;
 import com.example.cryptogramgamewithspring.Presentation.ConsoleView;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
 
-@Component
 public class GameplayController extends ConsoleCommandController {
 
+    private final CommandSupplier<GameContext> supplier;
     private final ConsoleView view;
-    private final PlayerService playerService;
-    private final CommandSupplier supplier;
-    private Player player;
-    private Cryptogram cryptogram;
+    private final Player player;
+    private final Cryptogram cryptogram;
 
-    @Autowired
-    public GameplayController(ConsoleView view, PlayerService playerService, @Qualifier("GameplayCommands") CommandSupplier supplier) {
-        this.view = view;
-        this.playerService = playerService;
+    public GameplayController(CommandSupplier<GameContext> supplier, ConsoleView view, Cryptogram cryptogram, Player player) {
         this.supplier = supplier;
+        this.view = view;
+        this.cryptogram = cryptogram;
+        this.player = player;
     }
 
     public void mainLoop() {
@@ -41,17 +36,10 @@ public class GameplayController extends ConsoleCommandController {
     }
 
     private boolean executeCommand(String[] input) {
-        Command command = supplier.fetchCommand(input, player);
+        GameContext context = new GameContext(cryptogram, player, input);
+        Command command = supplier.fetchCommand(input[0], context);
         command.execute();
         return command.didExit();
-    }
-
-    public void setPlayer(Player player) {
-        this.player = player;
-    }
-
-    public void setCryptogram(Cryptogram cryptogram) {
-        this.cryptogram = cryptogram;
     }
 
     @Override
