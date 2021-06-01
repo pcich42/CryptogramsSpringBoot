@@ -1,12 +1,11 @@
 package com.example.cryptogramgamewithspring.Controllers.Commands;
 
-public class exitCommand implements Command {
-    public exitCommand() {
+public class UndoCommand implements Command {
+    public UndoCommand() {
     }
 
     @Override
     public void execute() {
-
     }
 
     @Override

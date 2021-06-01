@@ -2,7 +2,6 @@ package com.example.cryptogramgamewithspring.Controllers.Commands;
 
 import com.example.cryptogramgamewithspring.Controllers.Commands.CommandSupplier.CommandSupplier;
 import com.example.cryptogramgamewithspring.Controllers.Commands.CommandSupplier.GameContext;
-import com.example.cryptogramgamewithspring.Controllers.GameplayController;
 import com.example.cryptogramgamewithspring.Cryptogram.Cryptogram;
 import com.example.cryptogramgamewithspring.Cryptogram.CryptogramRepository;
 import com.example.cryptogramgamewithspring.Player.InvalidFileFormatException;
@@ -13,7 +12,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.io.IOException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -45,7 +43,7 @@ public class playLoadedCryptogramCommandTests {
         willCallRealMethod().given(mockView).displayMessage(anyString());
 
         // when
-        playLoadedCryptogramCommand command = new playLoadedCryptogramCommand(mockView, cryptogramRepository, player, supplier);
+        PlayLoadedCryptogramCommand command = new PlayLoadedCryptogramCommand(mockView, cryptogramRepository, player, supplier);
         String output = tapSystemOut(command::execute);
         assertEquals(">>>>> Type help to list all available commands.\n" +
                 "\n" +
@@ -65,7 +63,7 @@ public class playLoadedCryptogramCommandTests {
         given(cryptogramRepository.loadCryptogram(any())).willReturn(Optional.empty());
 
         // when
-        playLoadedCryptogramCommand command = new playLoadedCryptogramCommand(mockView, cryptogramRepository, player, supplier);
+        PlayLoadedCryptogramCommand command = new PlayLoadedCryptogramCommand(mockView, cryptogramRepository, player, supplier);
         String output = tapSystemOut(command::execute);
         assertEquals(">>>>> No cryptogram stored, Try creating a new one.\n\n", output);
 
@@ -82,7 +80,7 @@ public class playLoadedCryptogramCommandTests {
         given(cryptogramRepository.loadCryptogram(any())).willThrow(InvalidFileFormatException.class);
 
         // when
-        playLoadedCryptogramCommand command = new playLoadedCryptogramCommand(mockView, cryptogramRepository, player, supplier);
+        PlayLoadedCryptogramCommand command = new PlayLoadedCryptogramCommand(mockView, cryptogramRepository, player, supplier);
         String output = tapSystemOut(command::execute);
         assertEquals(">>>>> File is corrupted. Either remove the file manually or play and save a new game to be able to load.\n\n", output);
 

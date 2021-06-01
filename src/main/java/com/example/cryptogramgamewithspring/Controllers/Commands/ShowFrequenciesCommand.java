@@ -1,8 +1,8 @@
 package com.example.cryptogramgamewithspring.Controllers.Commands;
 
-public class showFrequenciesCommand implements Command {
+public class ShowFrequenciesCommand implements Command {
 
-    public showFrequenciesCommand() {
+    public ShowFrequenciesCommand() {
     }
 
     @Override

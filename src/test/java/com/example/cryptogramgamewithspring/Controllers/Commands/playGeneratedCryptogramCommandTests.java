@@ -2,7 +2,6 @@ package com.example.cryptogramgamewithspring.Controllers.Commands;
 
 import com.example.cryptogramgamewithspring.Controllers.Commands.CommandSupplier.CommandSupplier;
 import com.example.cryptogramgamewithspring.Controllers.Commands.CommandSupplier.GameContext;
-import com.example.cryptogramgamewithspring.Controllers.GameplayController;
 import com.example.cryptogramgamewithspring.Cryptogram.Cryptogram;
 import com.example.cryptogramgamewithspring.Cryptogram.CryptogramRepository;
 import com.example.cryptogramgamewithspring.Player.Player;
@@ -48,7 +47,7 @@ class playGeneratedCryptogramCommandTests {
         willCallRealMethod().given(mockView).displayMessage(anyString());
 
         // when
-        playGeneratedCryptogramCommand command = new playGeneratedCryptogramCommand(mockView, cryptogramRepository, player, initialCommand, supplier);
+        PlayGeneratedCryptogramCommand command = new PlayGeneratedCryptogramCommand(mockView, cryptogramRepository, player, initialCommand, supplier);
         String output = tapSystemOut(command::execute);
         assertEquals(">>>>> Type help to list all available commands.\n" +
                 "\n" +
@@ -68,7 +67,7 @@ class playGeneratedCryptogramCommandTests {
         given(cryptogramRepository.generateCryptogram(any())).willThrow(IOException.class);
 
         // when
-        playGeneratedCryptogramCommand command = new playGeneratedCryptogramCommand(mockView, cryptogramRepository, player, initialCommand, supplier);
+        PlayGeneratedCryptogramCommand command = new PlayGeneratedCryptogramCommand(mockView, cryptogramRepository, player, initialCommand, supplier);
         String output = tapSystemOut(command::execute);
         assertEquals(">>>>> Couldn't generate Cryptogram.\n\n", output);
 
@@ -86,7 +85,7 @@ class playGeneratedCryptogramCommandTests {
         given(cryptogramRepository.generateCryptogram("invalid")).willReturn(Optional.empty());
 
         // when
-        playGeneratedCryptogramCommand command = new playGeneratedCryptogramCommand(mockView, cryptogramRepository, player, initialCommand, supplier);
+        PlayGeneratedCryptogramCommand command = new PlayGeneratedCryptogramCommand(mockView, cryptogramRepository, player, initialCommand, supplier);
         String output = tapSystemOut(command::execute);
         assertEquals(">>>>> Unexpected cryptogram type. Try letters or numbers.\n\n", output);
 

@@ -1,5 +1,6 @@
 package com.example.cryptogramgamewithspring.Presentation;
 
+import com.example.cryptogramgamewithspring.Cryptogram.Cryptogram;
 import org.springframework.stereotype.Component;
 
 import java.util.Scanner;
@@ -21,7 +22,7 @@ public class ConsoleView {
     public void displayHelp() {
     }
 
-    public void displayCryptogram() {
+    public void displayCryptogram(Cryptogram cryptogram) {
     }
 
     public String[] getInput() {

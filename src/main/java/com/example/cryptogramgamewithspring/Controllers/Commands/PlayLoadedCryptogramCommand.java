@@ -12,7 +12,7 @@ import com.example.cryptogramgamewithspring.Presentation.ConsoleView;
 import java.io.IOException;
 import java.util.Optional;
 
-public class playLoadedCryptogramCommand implements Command {
+public class PlayLoadedCryptogramCommand implements Command {
 
     private final CommandSupplier<GameContext> supplier;
     private final ConsoleView view;
@@ -20,7 +20,7 @@ public class playLoadedCryptogramCommand implements Command {
     private final Player player;
 
 
-    public playLoadedCryptogramCommand(ConsoleView view,
+    public PlayLoadedCryptogramCommand(ConsoleView view,
                                        CryptogramRepository cryptogramRepository,
                                        Player player,
                                        CommandSupplier<GameContext> supplier) {

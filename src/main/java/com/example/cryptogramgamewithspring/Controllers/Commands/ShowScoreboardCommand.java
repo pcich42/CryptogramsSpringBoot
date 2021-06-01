@@ -9,13 +9,13 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class showScoreboardCommand implements Command{
+public class ShowScoreboardCommand implements Command{
 
     private static final int NO_PLAYERS_TO_SHOW = 10;
     private final ConsoleView view;
     private final PlayerService playerService;
 
-    public showScoreboardCommand(ConsoleView view, PlayerService playerService) {
+    public ShowScoreboardCommand(ConsoleView view, PlayerService playerService) {
         this.view = view;
         this.playerService = playerService;
     }

@@ -1,8 +1,7 @@
 package com.example.cryptogramgamewithspring.Controllers.Commands;
 
-public class hintCommand implements Command {
-
-    public hintCommand() {
+public class ExitCommand implements Command {
+    public ExitCommand() {
     }
 
     @Override
@@ -12,6 +11,6 @@ public class hintCommand implements Command {
 
     @Override
     public boolean didExit() {
-        return false;
+        return true;
     }
 }

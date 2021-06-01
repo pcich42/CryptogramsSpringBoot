@@ -78,7 +78,7 @@ public class showScoreboardCommandTests {
     private String getOutput(Map<Player, Double> accuracies) throws Exception {
         willCallRealMethod().given(view).displayMessage(any());
         given(playerService.getAccuracies()).willReturn(accuracies);
-        showScoreboardCommand command = new showScoreboardCommand(view, playerService);
+        ShowScoreboardCommand command = new ShowScoreboardCommand(view, playerService);
         return tapSystemOut(command::execute);
     }
 

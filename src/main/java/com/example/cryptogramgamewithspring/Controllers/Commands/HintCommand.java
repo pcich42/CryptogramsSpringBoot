@@ -1,8 +1,8 @@
 package com.example.cryptogramgamewithspring.Controllers.Commands;
 
-public class showSolutionCommand implements Command {
+public class HintCommand implements Command {
 
-    public showSolutionCommand() {
+    public HintCommand() {
     }
 
     @Override

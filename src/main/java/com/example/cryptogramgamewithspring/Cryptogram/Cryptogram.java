@@ -8,6 +8,7 @@ public class Cryptogram {
     // mapping from real letter to crypto value
     private final Map<String, String> solution;
     private final String phrase;
+    private Map<String, String> alphabet;
 
     public Cryptogram(String phrase) {
         this.solution = new HashMap<>();
@@ -27,4 +28,19 @@ public class Cryptogram {
         return true;
     }
 
+    public void fillSolution() {
+
+    }
+
+    public String parseToString() {
+        return "";
+    }
+
+    public boolean isFinished() {
+        return false;
+    }
+
+    public boolean isSolutionCorrect() {
+        return false;
+    }
 }

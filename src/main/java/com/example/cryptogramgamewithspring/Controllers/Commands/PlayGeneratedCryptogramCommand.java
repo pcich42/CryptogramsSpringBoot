@@ -11,7 +11,7 @@ import com.example.cryptogramgamewithspring.Presentation.ConsoleView;
 import java.io.IOException;
 import java.util.Optional;
 
-public class playGeneratedCryptogramCommand implements Command {
+public class PlayGeneratedCryptogramCommand implements Command {
 
     private final ConsoleView view;
     private final CryptogramRepository cryptogramRepository;
@@ -19,7 +19,7 @@ public class playGeneratedCryptogramCommand implements Command {
     private final String[] input;
     private final CommandSupplier<GameContext> supplier;
 
-    public playGeneratedCryptogramCommand(ConsoleView view, CryptogramRepository cryptogramRepository, Player player, String[] input, CommandSupplier<GameContext> supplier) {
+    public PlayGeneratedCryptogramCommand(ConsoleView view, CryptogramRepository cryptogramRepository, Player player, String[] input, CommandSupplier<GameContext> supplier) {
         this.view = view;
         this.cryptogramRepository = cryptogramRepository;
         this.player = player;

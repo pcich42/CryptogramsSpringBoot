@@ -1,11 +1,12 @@
 package com.example.cryptogramgamewithspring.Controllers.Commands;
 
-public class undoCommand implements Command {
-    public undoCommand() {
+public class SaveGameCommand implements Command {
+    public SaveGameCommand() {
     }
 
     @Override
     public void execute() {
+
     }
 
     @Override

@@ -22,9 +22,9 @@ public class MenuCommandSupplier implements CommandSupplier<MenuContext> {
     public MenuCommandSupplier(ConsoleView view, CryptogramRepository repository, PlayerService playerService, CommandSupplier<GameContext> supplier) {
         this.view = view;
         this.commands = new HashMap<>();
-        commands.put("new", (context) -> new playGeneratedCryptogramCommand(view, repository, context.getPlayer(), context.getInput(), supplier));
-        commands.put("load", (context) -> new playLoadedCryptogramCommand(view, repository, context.getPlayer(), supplier));
-        commands.put("scores", (context) -> new showScoreboardCommand(view, playerService));
+        commands.put("new", (context) -> new PlayGeneratedCryptogramCommand(view, repository, context.getPlayer(), context.getInput(), supplier));
+        commands.put("load", (context) -> new PlayLoadedCryptogramCommand(view, repository, context.getPlayer(), supplier));
+        commands.put("scores", (context) -> new ShowScoreboardCommand(view, playerService));
     }
 
     @Override
